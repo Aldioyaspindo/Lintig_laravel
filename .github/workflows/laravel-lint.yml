@@ -4,7 +4,7 @@ on: [push, pull_request] # Menjalankan linting setiap ada push atau PR
 
 jobs:
   lint:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
