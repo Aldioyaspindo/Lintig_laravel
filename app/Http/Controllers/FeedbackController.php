@@ -14,6 +14,7 @@ class FeedbackController extends Controller
     {
         $user = auth()->user(); // Mengambil informasi pengguna yang sedang masuk
         $feedback = Feedback::where('user_id', $user->id)->get(); // Mengambil umpan balik yang dibuat oleh pengguna tersebut
+
         return view('dashboard.feedback', [
             'feedback' => $feedback,
         ]);
@@ -34,7 +35,7 @@ class FeedbackController extends Controller
     {
         $user = auth()->user(); // Mengambil informasi pengguna yang sedang masuk
 
-        $feedback = new Feedback();
+        $feedback = new Feedback;
         $feedback->user_id = $user->id; // Menghubungkan umpan balik dengan ID pengguna yang membuatnya
         $feedback->rating = $request->input('rating');
         $feedback->kesan = $request->input('kesan');

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class BukuTamu extends Model
 {
- 
     protected $fillable = [
         'tanggal',
         'nama',

@@ -16,17 +16,16 @@ class JadwalKunjunganController extends Controller
     public function index()
     {
 
-
         $sekolahUsers = User::where('role', 'sekolah')->pluck('id');
         $kunjunganPetugas = KunjunganPetugas::with('petugas')->where('status', 0)->get();
         $jadwalKunjungan = JadwalKunjungan::whereIn('user_id', $sekolahUsers)->get();
+
         return view('dashboard.manajemen-kegiatan.jadwal-kunjungan.index', [
             'jadwalKunjungan' => $jadwalKunjungan,
             'kunjunganPetugas' => $kunjunganPetugas,
 
         ]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -35,6 +34,7 @@ class JadwalKunjunganController extends Controller
     {
 
         $sekolahUsers = User::where('role', 'sekolah')->get(); // Mengambil daftar pengguna dengan peran "sekolah"
+
         return view('dashboard.manajemen-kegiatan.jadwal-kunjungan.create', [
             'sekolahUsers' => $sekolahUsers,
 
@@ -104,7 +104,7 @@ class JadwalKunjunganController extends Controller
         }
 
         // Jika tidak ada konflik, buat jadwal kunjungan baru
-        $jadwalKunjungan = new JadwalKunjungan();
+        $jadwalKunjungan = new JadwalKunjungan;
         $jadwalKunjungan->user_id = $validatedData['user_id'];
         $jadwalKunjungan->tgl_kunjungan = $validatedData['tgl_kunjungan'];
         $jadwalKunjungan->jam_mulai = $validatedData['jam_mulai'];
@@ -113,14 +113,6 @@ class JadwalKunjunganController extends Controller
 
         return redirect('dashboard-jadwal-kunjungan');
     }
-
-
-
-
-
-
-
-
 
     /**
      * Display the specified resource.
@@ -137,6 +129,7 @@ class JadwalKunjunganController extends Controller
     public function edit($id)
     {
         $jadwalKunjungan = JadwalKunjungan::findOrFail($id);
+
         return view('dashboard.manajemen-kegiatan.jadwal-kunjungan.edit', [
             'jadwalKunjungan' => $jadwalKunjungan,
         ]);
@@ -154,15 +147,15 @@ class JadwalKunjunganController extends Controller
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
         ], [
-            'tgl_kunjungan' => 'Jadwal kunjungan harus diisi hari dan dan setelah hari ini'
+            'tgl_kunjungan' => 'Jadwal kunjungan harus diisi hari dan dan setelah hari ini',
         ]);
 
         // Cek apakah ada konflik dengan jadwal kunjungan lain
         $existingJadwal = JadwalKunjungan::where('tgl_kunjungan', $validatedData['tgl_kunjungan'])
-            ->where(function ($query) use ($validatedData, $jadwalKunjungan) {
+            ->where(function ($query) use ($validatedData) {
                 $query->whereBetween('jam_mulai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
                     ->orWhereBetween('jam_selesai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
-                    ->orWhere(function ($query) use ($validatedData, $jadwalKunjungan) {
+                    ->orWhere(function ($query) use ($validatedData) {
                         $query->where('jam_mulai', '<=', $validatedData['jam_mulai'])
                             ->where('jam_selesai', '>=', $validatedData['jam_selesai']);
                     });
@@ -190,6 +183,7 @@ class JadwalKunjunganController extends Controller
     public function destroy(JadwalKunjungan $jadwalKunjungan)
     {
         $jadwalKunjungan->delete();
+
         return redirect('dashboard-jadwal-kunjungan');
     }
 }

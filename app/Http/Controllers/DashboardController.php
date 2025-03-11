@@ -6,15 +6,12 @@ use App\Models\BukuTamu;
 use App\Models\HistoriKunjungan;
 use App\Models\JadwalKunjungan;
 use App\Models\Koleksi;
-use App\Models\KunjunganPetugas;
 use App\Models\Museum;
 use App\Models\Pegawai;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\FlareClient\View;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -33,7 +30,6 @@ class DashboardController extends Controller
                 $query->where('user_id', $user->id);
             })->get();
         }
-
 
         $totalPegawai = Pegawai::count();
         $totalPengguna = User::count();
@@ -101,9 +97,10 @@ class DashboardController extends Controller
 
         $user = auth()->user(); // Mengambil informasi pengguna yang sedang masuk
         $museum = Museum::all();
+
         return view('dashboard.profile.index', [
             'user' => $user,
-            'museum' => $museum // Mengirimkan informasi pengguna ke tampilan
+            'museum' => $museum, // Mengirimkan informasi pengguna ke tampilan
         ]);
     }
 }

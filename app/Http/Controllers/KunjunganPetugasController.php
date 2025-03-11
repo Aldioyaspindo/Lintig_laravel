@@ -30,11 +30,11 @@ class KunjunganPetugasController extends Controller
 
         HistoriKunjungan::create([
             'kunjungan_petugas_id' => $kunjunganPetugas->id,
-            'jadwalKunjungan' => $jadwalKunjungan 
+            'jadwalKunjungan' => $jadwalKunjungan,
         ]);
         // Hapus data dari tabel kunjungan_petugas
         $kunjunganPetugas->update([
-            'status'=>1
+            'status' => 1,
         ]);
 
         return redirect()->back()->with('success', 'Data kunjungan berhasil dipindahkan ke histori.');
@@ -45,6 +45,7 @@ class KunjunganPetugasController extends Controller
 
         $pegawai = Pegawai::all();
         $jadwalKunjungan = JadwalKunjungan::all();
+
         // dd($jadwalKunjungan);
         return view('dashboard.manajemen-kegiatan.kunjungan-petugas.create', [
             'pegawai' => $pegawai,
@@ -64,7 +65,7 @@ class KunjunganPetugasController extends Controller
         ]);
 
         foreach ($request->pegawai_id as $pegawaiId) {
-            $model = new KunjunganPetugas();
+            $model = new KunjunganPetugas;
             $model->jadwal_kunjungan_id = $validatedData['jadwal_kunjungan_id'];
             $model->pegawai_id = $pegawaiId;
             $model->save();
