@@ -100,8 +100,14 @@ class JadwalKunjunganController extends Controller
         ->first();
 
         if ($existingJadwal) {
-            return redirect()->back()->withErrors(['message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'])->withInput();
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'
+                ])
+                ->withInput();
         }
+        
 
         // Jika tidak ada konflik, buat jadwal kunjungan baru
         $jadwalKunjungan = new JadwalKunjungan();
@@ -163,7 +169,12 @@ class JadwalKunjunganController extends Controller
         ->first();
 
         if ($existingJadwal) {
-            return redirect()->back()->withErrors(['message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'])->withInput();
+            return redirect()
+                ->back()
+                ->withErrors([
+                    'message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'
+                ])
+                ->withInput();
         }
 
         // Update jadwal kunjungan

@@ -33,7 +33,6 @@ class DashboardController extends Controller
                     $query->where('user_id', $user->id);
                 })
                 ->get();
-
         }
 
         $totalPegawai = Pegawai::count();

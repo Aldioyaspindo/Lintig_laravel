@@ -50,9 +50,9 @@ class DivisiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Divisi $Divisi)
+    public function show(Divisi $divisi)
     {
-        //
+        // Jika tidak digunakan, method ini bisa dikosongkan
     }
 
     /**
@@ -75,23 +75,26 @@ class DivisiController extends Controller
         $divisi = Divisi::findOrFail($id);
 
         $request->validate([
-            'nama_divisi' => 'required|unique:divisis,nama_divisi, ' . $id,
+            'nama_divisi' => 'required|unique:divisis,nama_divisi,' . $id,
         ], [
-            'nama_divisi.unique' => 'Divisi Sudah Ada, Silahkan Ganti Divisi Lain',
+            'nama_divisi.unique' => 'Divisi sudah ada, silakan gunakan nama lain',
         ]);
 
-        $divisi->nama_divisi = $request->nama_divisi;
-        $divisi->save();
+        $divisi->update([
+            'nama_divisi' => $request->nama_divisi,
+        ]);
 
-        return redirect('/dashboard-divisi')->with('success', 'Divisi berhasil diperbaharui!');
+        return redirect('/dashboard-divisi')->with('success', 'Divisi berhasil diperbarui!');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id)
     {
-        $divisis = Divisi::findOrFail($id);
-        $divisis->delete();
+        $divisi = Divisi::findOrFail($id);
+        $divisi->delete();
 
         return redirect('/dashboard-divisi')->with('delete', 'Divisi berhasil dihapus.');
     }
-
 }
