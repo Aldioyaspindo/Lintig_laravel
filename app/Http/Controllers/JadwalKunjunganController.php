@@ -108,7 +108,6 @@ class JadwalKunjunganController extends Controller
                 ->withInput();
         }
         
-
         // Jika tidak ada konflik, buat jadwal kunjungan baru
         $jadwalKunjungan = new JadwalKunjungan();
         $jadwalKunjungan->user_id = $validatedData['user_id'];
