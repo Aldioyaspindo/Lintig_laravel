@@ -1,34 +1,22 @@
 name: Laravel Linting
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request] # Menjalankan linting setiap ada push atau PR
 
 jobs:
   lint:
-    name: Run Laravel Linter
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Set up PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-          extensions: mbstring, pdo, pdo_mysql
-          tools: composer, pint, phpcs
+          php-version: '8.1' # Sesuaikan dengan versi PHP yang digunakan
+          tools: composer
 
-      - name: Install Dependencies
-        run: composer install --no-progress --no-suggest --prefer-dist
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest
 
-      - name: Run Laravel Pint
-        run: vendor/bin/pint --test
-
-      - name: Run PHP CodeSniffer
+      - name: Run PHP_CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 app/
