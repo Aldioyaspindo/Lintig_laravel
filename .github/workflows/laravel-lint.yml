@@ -12,7 +12,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1' # Sesuaikan dengan versi PHP yang digunakan
+          php-version: '8.2.12' # Sesuaikan dengan versi PHP yang digunakan
           tools: composer
 
       - name: Install dependencies
