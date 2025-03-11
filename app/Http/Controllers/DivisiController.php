@@ -75,31 +75,23 @@ class DivisiController extends Controller
         $divisi = Divisi::findOrFail($id);
 
         $request->validate([
-            'nama_divisi' => 'required|unique:divisis,nama_divisi,'.$id,
+            'nama_divisi' => 'required|unique:divisis,nama_divisi, ' . $id,
         ], [
             'nama_divisi.unique' => 'Divisi Sudah Ada, Silahkan Ganti Divisi Lain',
         ]);
 
         $divisi->nama_divisi = $request->nama_divisi;
-
-        // Jika Anda ingin memperbarui atribut lainnya, Anda dapat melakukannya di sini
-        // $divisi->atribut_lain = $request->atribut_lain;
-
         $divisi->save();
 
         return redirect('/dashboard-divisi')->with('success', 'Divisi berhasil diperbaharui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $divisis = Divisi::findOrFail($id);
-
         $divisis->delete();
 
         return redirect('/dashboard-divisi')->with('delete', 'Divisi berhasil dihapus.');
-
     }
+
 }

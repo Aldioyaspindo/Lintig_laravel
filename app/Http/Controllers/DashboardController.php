@@ -19,16 +19,21 @@ class DashboardController extends Controller
     {
 
         $user = Auth::user(); // Mendapatkan data user yang sedang login
-        $historiKunjunganQuery = HistoriKunjungan::with(['kunjunganPetugas.jadwalKunjungan']);
+        $historiKunjunganQuery = HistoriKunjungan::with([
+            'kunjunganPetugas.jadwalKunjungan'
+        ]);
 
         if ($user->role === 'superadmin' || $user->role === 'admin') {
             // Jika pengguna memiliki peran superadmin atau admin, ambil semua data histori kunjungan
             $historiKunjungan = $historiKunjunganQuery->get();
         } else {
             // Jika bukan superadmin atau admin, ambil data histori kunjungan berdasarkan user_id
-            $historiKunjungan = $historiKunjunganQuery->whereHas('kunjunganPetugas.jadwalKunjungan', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->get();
+            $historiKunjungan = $historiKunjunganQuery
+                ->whereHas('kunjunganPetugas.jadwalKunjungan', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->get();
+
         }
 
         $totalPegawai = Pegawai::count();
@@ -63,14 +68,18 @@ class DashboardController extends Controller
     public function filterKunjungan(Request $request)
     {
         $user = Auth::user();
-        $historiKunjunganQuery = HistoriKunjungan::with(['kunjunganPetugas.jadwalKunjungan']);
+        $historiKunjunganQuery = HistoriKunjungan::with([
+            'kunjunganPetugas.jadwalKunjungan'
+        ]);
 
         if ($user->role === 'superadmin' || $user->role === 'admin') {
             $historiKunjungan = $historiKunjunganQuery->get();
         } else {
-            $historiKunjungan = $historiKunjunganQuery->whereHas('kunjunganPetugas.jadwalKunjungan', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->get();
+            $historiKunjungan = $historiKunjunganQuery
+                ->whereHas('kunjunganPetugas.jadwalKunjungan', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->get();
         }
 
         $filterType = $request->input('filter_type', 'minggu');

@@ -89,22 +89,22 @@ class JadwalKunjunganController extends Controller
 
         // Cek apakah jadwal kunjungan dengan tanggal dan jam yang sama sudah ada
         $existingJadwal = JadwalKunjungan::where('tgl_kunjungan', $validatedData['tgl_kunjungan'])
-            ->where(function ($query) use ($validatedData) {
-                $query->whereBetween('jam_mulai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
-                    ->orWhereBetween('jam_selesai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
-                    ->orWhere(function ($query) use ($validatedData) {
-                        $query->where('jam_mulai', '<=', $validatedData['jam_mulai'])
-                            ->where('jam_selesai', '>=', $validatedData['jam_selesai']);
-                    });
-            })
-            ->first();
+        ->where(function ($query) use ($validatedData) {
+            $query->whereBetween('jam_mulai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
+                ->orWhereBetween('jam_selesai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
+                ->orWhere(function ($query) use ($validatedData) {
+                    $query->where('jam_mulai', '<=', $validatedData['jam_mulai'])
+                        ->where('jam_selesai', '>=', $validatedData['jam_selesai']);
+                });
+        })
+        ->first();
 
         if ($existingJadwal) {
             return redirect()->back()->withErrors(['message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'])->withInput();
         }
 
         // Jika tidak ada konflik, buat jadwal kunjungan baru
-        $jadwalKunjungan = new JadwalKunjungan;
+        $jadwalKunjungan = new JadwalKunjungan();
         $jadwalKunjungan->user_id = $validatedData['user_id'];
         $jadwalKunjungan->tgl_kunjungan = $validatedData['tgl_kunjungan'];
         $jadwalKunjungan->jam_mulai = $validatedData['jam_mulai'];
@@ -152,16 +152,15 @@ class JadwalKunjunganController extends Controller
 
         // Cek apakah ada konflik dengan jadwal kunjungan lain
         $existingJadwal = JadwalKunjungan::where('tgl_kunjungan', $validatedData['tgl_kunjungan'])
-            ->where(function ($query) use ($validatedData) {
-                $query->whereBetween('jam_mulai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
-                    ->orWhereBetween('jam_selesai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
-                    ->orWhere(function ($query) use ($validatedData) {
-                        $query->where('jam_mulai', '<=', $validatedData['jam_mulai'])
-                            ->where('jam_selesai', '>=', $validatedData['jam_selesai']);
-                    });
-            })
-            ->where('id', '<>', $jadwalKunjungan->id) // Exclude current record from comparison
-            ->first();
+        ->where(function ($query) use ($validatedData) {
+            $query->whereBetween('jam_mulai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
+                ->orWhereBetween('jam_selesai', [$validatedData['jam_mulai'], $validatedData['jam_selesai']])
+                ->orWhere(function ($query) use ($validatedData) {
+                    $query->where('jam_mulai', '<=', $validatedData['jam_mulai'])
+                        ->where('jam_selesai', '>=', $validatedData['jam_selesai']);
+                });
+        })
+        ->first();
 
         if ($existingJadwal) {
             return redirect()->back()->withErrors(['message' => 'Jadwal kunjungan pada tanggal dan jam tersebut sudah ada.'])->withInput();

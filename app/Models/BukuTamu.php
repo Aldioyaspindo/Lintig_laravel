@@ -15,24 +15,24 @@ class BukuTamu extends Model
         'usia',
         'kesan',
         'pesan',
-
     ];
 
     public static function getAllBukuTamaByCreatedAt()
     {
-        $permohonanCounts = BukuTamu::select(DB::raw("DATE_FORMAT(created_at, '%d %M %Y') as created_date"), DB::raw('count(*) as count'))
-            ->groupBy('created_date')
-            ->get();
+        $permohonanCounts = BukuTamu::select(
+            DB::raw("DATE_FORMAT(created_at, '%d %M %Y') as created_date"),
+            DB::raw('count(*) as count')
+        )
+        ->groupBy('created_date')
+        ->get();
 
         $result = [];
 
         foreach ($permohonanCounts as $permohonanCount) {
-            $data = [
+            $result[] = [
                 'created_date' => strval($permohonanCount->created_date),
                 'count' => $permohonanCount->count,
             ];
-
-            $result[] = $data;
         }
 
         return $result;
@@ -44,19 +44,24 @@ class BukuTamu extends Model
             $interval = 'today';
         }
 
-        $query = BukuTamu::select(DB::raw("DATE_FORMAT(created_at, '%d %M %Y') as created_date"), DB::raw('count(*) as count'));
+        $query = BukuTamu::select(
+            DB::raw("DATE_FORMAT(created_at, '%d %M %Y') as created_date"),
+            DB::raw('count(*) as count')
+        );
 
         if ($interval === 'year') {
             $query->whereYear('created_at', $value);
         } elseif ($interval === 'month') {
-            $query->whereYear('created_at', date('Y', strtotime($value)))->whereMonth('created_at', date('m', strtotime($value)));
+            $query->whereYear('created_at', date('Y', strtotime($value)))
+                  ->whereMonth('created_at', date('m', strtotime($value)));
         } elseif ($interval === 'week') {
             $startDate = date('Y-m-d', strtotime($value));
             $endDate = date('Y-m-d', strtotime("$startDate +6 days"));
             $query->whereBetween('created_at', [$startDate, $endDate]);
         } elseif ($interval === 'today') {
             $now = now();
-            $query->whereDate('created_at', $now->toDateString())->whereTime('created_at', '>=', $now->format('H:i:s'));
+            $query->whereDate('created_at', $now->toDateString())
+                  ->whereTime('created_at', '>=', $now->format('H:i:s'));
         }
 
         $permohonanCounts = $query->groupBy('created_date')->get();
@@ -64,12 +69,10 @@ class BukuTamu extends Model
         $result = [];
 
         foreach ($permohonanCounts as $permohonanCount) {
-            $data = [
+            $result[] = [
                 'created_date' => strval($permohonanCount->created_date),
                 'count' => $permohonanCount->count,
             ];
-
-            $result[] = $data;
         }
 
         return $result;
